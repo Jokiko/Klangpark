@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 public class ParkWindow extends JFrame implements KeyListener {
 
     JLabel label;
+    JLabel position;
     int x;
     int z;
 
@@ -15,12 +16,13 @@ public class ParkWindow extends JFrame implements KeyListener {
         super(s);
         this.x = x;
         this.z = z;
+        this.setTitle("Klangpark");
         JPanel p = new JPanel();
-        label = new JLabel("Klangpark");
-        p.add(label);
+        position = new JLabel("Position: "+Park.currentX+ ", "+Park.currentZ);
+        p.add(position);
         add(p);
         addKeyListener(this);
-        setSize(200, 100);
+        setSize(300, 100);
         setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -36,6 +38,7 @@ public class ParkWindow extends JFrame implements KeyListener {
             case KeyEvent.VK_W, KeyEvent.VK_UP -> {
                 if (Park.currentZ < z) {
                     Park.currentZ++;
+                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
                 }
                 Park.lineOfSight = 0;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
@@ -43,13 +46,15 @@ public class ParkWindow extends JFrame implements KeyListener {
             case KeyEvent.VK_A, KeyEvent.VK_LEFT -> {
                 if (Park.currentX > 0) {
                     Park.currentX--;
+                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
                 }
-                Park.lineOfSight = 1;
+                Park.lineOfSight = 3;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
             case KeyEvent.VK_S, KeyEvent.VK_DOWN -> {
                 if (Park.currentZ > 0) {
                     Park.currentZ--;
+                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
                 }
                 Park.lineOfSight = 2;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
@@ -57,8 +62,9 @@ public class ParkWindow extends JFrame implements KeyListener {
             case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> {
                 if (Park.currentX < x) {
                     Park.currentX++;
+                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
                 }
-                Park.lineOfSight = 3;
+                Park.lineOfSight = 1;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
         }

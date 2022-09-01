@@ -21,7 +21,7 @@ public class SoundTest {
         mixer = AudioSystem.getMixer(mixInfos[0]);*/
 
         try{
-        URL url = Main.class.getResource("cardinal.wav");
+        URL url = Main.class.getResource("/sounds/cardinal.wav");
         AudioInputStream ais = AudioSystem.getAudioInputStream(url);
         clip = AudioSystem.getClip();
 
