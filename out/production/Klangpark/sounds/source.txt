@@ -1,2 +1,2 @@
 cricket: https://freesound.org/people/Sojan/sounds/400663/
-CC0
+licence: CC0

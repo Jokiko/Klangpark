@@ -1,5 +1,4 @@
 import javax.sound.sampled.*;
-import javax.sound.midi.*;
 import java.io.IOException;
 import java.net.URL;
 
@@ -54,6 +53,12 @@ public class Park extends Thread{
                     else {
                         park[j][k][i] = new SoundUnit(0);
                     }*/
+                    /*if(j == x/2 && i == z/2 && k == 2) park[j][k][i] = new SoundUnit(2);
+                    else
+                    if(j == x/4 && i == z/4 && k == 2) park[j][k][i] = new SoundUnit(1);
+                    else {
+                        park[j][k][i] = new SoundUnit(0);
+                    }*/
                 }
             }
         }
@@ -82,7 +87,7 @@ public class Park extends Thread{
 
     //calculate volume decibels based on vector amount
     private float getSoundVolume(double amount, int soundType){
-        float volume = 0;
+        float volume;
         double ratio;
         //insect
         if (soundType == 1){
@@ -98,21 +103,15 @@ public class Park extends Thread{
 
     //calculate angle of incoming sound vector
     private float getSoundPanning(int vectorX, int vectorY, int vectorZ){
-        float pan = 0;
+        float pan;
         int tempX = 0;
         int tempZ = 0;
         double scalarProduct;
         double amount1, amount2, angle;
         switch (lineOfSight) {
-            case 0 -> {
-                tempX = -1;
-                tempZ = 0;
-            }
+            case 0 -> tempX = -1;
             case 2 -> tempX = 1;
-            case 1 -> {
-                tempX = 0;
-                tempZ = 1;
-            }
+            case 1 -> tempZ = 1;
             case 3 -> tempZ = -1;
         }
         //calculate angle of incoming sound vector in relation to lineOfSight
@@ -121,11 +120,11 @@ public class Park extends Thread{
         amount2 = Math.sqrt((Math.pow(tempX,2)+Math.pow(0, 2)+Math.pow(tempZ, 2)));
         angle = Math.toDegrees(Math.acos(scalarProduct/(amount1*amount2)));
         System.out.println(vectorX+ ", "+ vectorZ+ ", "+angle);
-        switch (lineOfSight){
+        /*switch (lineOfSight){
             case 1:
                 pan = convertAngleToPan(angle);
                 break;
-        }
+        }*/
         pan = convertAngleToPan(angle);
         return pan;
     }

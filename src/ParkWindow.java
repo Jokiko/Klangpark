@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 //source: https://stackoverflow.com/questions/10876491/how-to-use-keylistener
 public class ParkWindow extends JFrame implements KeyListener {
 
-    JLabel label;
     JLabel position;
     int x;
     int z;
