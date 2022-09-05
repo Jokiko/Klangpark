@@ -53,7 +53,7 @@ public class Park extends Thread{
                     else {
                         park[j][k][i] = new SoundUnit(0);
                     }*/
-                    /*if(j == x/2 && i == z/2 && k == 2) park[j][k][i] = new SoundUnit(2);
+                    /*(j == x/2 && i == z/2 && k == 2) park[j][k][i] = new SoundUnit(2);
                     else
                     if(j == x/4 && i == z/4 && k == 2) park[j][k][i] = new SoundUnit(1);
                     else {
@@ -102,24 +102,24 @@ public class Park extends Thread{
     }
 
     //calculate angle of incoming sound vector
-    private float getSoundPanning(int vectorX, int vectorY, int vectorZ){
+    private float getSoundPanning(ThreeDVector soundVector){
         float pan;
-        int tempX = 0;
-        int tempZ = 0;
+        ThreeDVector tempVector;
         double scalarProduct;
         double amount1, amount2, angle;
         switch (lineOfSight) {
-            case 0 -> tempX = -1;
-            case 2 -> tempX = 1;
-            case 1 -> tempZ = 1;
-            case 3 -> tempZ = -1;
+            case 0 -> tempVector = new ThreeDVector(-1,0,0);
+            case 2 -> tempVector = new ThreeDVector(1,0,0);
+            case 1 -> tempVector = new ThreeDVector(0,0,1);
+            case 3 -> tempVector = new ThreeDVector(0,0,-1);
+            default -> throw new IllegalStateException("Unexpected value: " + lineOfSight);
         }
         //calculate angle of incoming sound vector in relation to lineOfSight
-        scalarProduct = vectorX * tempX + vectorZ * tempZ;
-        amount1 = Math.sqrt((Math.pow(vectorX,2)+Math.pow(vectorY, 2)+Math.pow(vectorZ, 2)));
-        amount2 = Math.sqrt((Math.pow(tempX,2)+Math.pow(0, 2)+Math.pow(tempZ, 2)));
+        scalarProduct = soundVector.x() * tempVector.x() + soundVector.z() * tempVector.z();
+        amount1 = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
+        amount2 = Math.sqrt((Math.pow(tempVector.x(), 2)+Math.pow(0, 2)+Math.pow(tempVector.z(), 2)));
         angle = Math.toDegrees(Math.acos(scalarProduct/(amount1*amount2)));
-        System.out.println(vectorX+ ", "+ vectorZ+ ", "+angle);
+        System.out.println(soundVector.x()+ ", "+ soundVector.z()+ ", "+angle);
         /*switch (lineOfSight){
             case 1:
                 pan = convertAngleToPan(angle);
@@ -130,9 +130,9 @@ public class Park extends Thread{
     }
 
     //play bird sound with given modifiers
-    private void playBirdSound(int vectorX, int vectorY, int vectorZ){
+    private void playBirdSound(ThreeDVector soundVector){
         System.out.println("Zwitscher");
-        double vectorLength = Math.sqrt((Math.pow(vectorX,2)+Math.pow(vectorY, 2)+Math.pow(vectorZ, 2)));
+        double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
         if(vectorLength <= birdRange) {
             try {
@@ -152,7 +152,7 @@ public class Park extends Thread{
 
                 //setting the sound's pan (left-right positioning)
                 FloatControl pan = (FloatControl) clip.getControl(FloatControl.Type.PAN);
-                float f = getSoundPanning(vectorX, vectorY, vectorZ);
+                float f = getSoundPanning(soundVector);
                 pan.setValue(f);
 
                  //TO-DO: random pitch shifting
@@ -165,9 +165,9 @@ public class Park extends Thread{
         }
     }
 
-    private void playInsectSound(int vectorX, int vectorY, int vectorZ){
+    private void playInsectSound(ThreeDVector soundVector){
         System.out.println("Zirp");
-        double vectorLength = Math.sqrt((Math.pow(vectorX,2)+Math.pow(vectorY, 2)+Math.pow(vectorZ, 2)));
+        double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
         if(vectorLength <= insectRange) {
             try {
@@ -187,7 +187,7 @@ public class Park extends Thread{
 
                 //setting the sound's pan (left-right positioning)
                 FloatControl pan = (FloatControl) clip.getControl(FloatControl.Type.PAN);
-                float f = getSoundPanning(vectorX, vectorY, vectorZ);
+                float f = getSoundPanning(soundVector);
                 pan.setValue(f);
 
                 //TO-DO: random pitch shifting
@@ -207,17 +207,15 @@ public class Park extends Thread{
                 for (int k = 0; k < z; k++) {
                     //entry is bird or insect
                     if (park[i][j][k].type() == 1 || park[i][j][k].type() == 2){
-                        int vectorX = currentX-i;
-                        int vectorY = currentY -j;
-                        int vectorZ = currentZ-k;
-                        System.out.println("Entfernung zum Standpunkt: "+vectorX + ", "+ vectorZ+ ",h: "+vectorY);
+                        ThreeDVector soundVector = new ThreeDVector(currentX-i, currentY-j, currentZ-k);
+                        System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
                         c++;
                         if(park[i][j][k].type() == 1){
                             int threshold = 4;
                             int random = (int) (Math.random() * threshold);
                             System.out.println("Random " + random);
                             if(random >= threshold-1) {
-                                playInsectSound(vectorX, vectorY, vectorZ);
+                                playInsectSound(soundVector);
                             }
                         }
                         else {
@@ -225,7 +223,7 @@ public class Park extends Thread{
                             int random = (int) (Math.random() * threshold);
                             System.out.println("Random " + random);
                             if(random >= threshold-1) {
-                                playBirdSound(vectorX, vectorY, vectorZ);
+                                playBirdSound(soundVector);
                             }
                         }
                     }
