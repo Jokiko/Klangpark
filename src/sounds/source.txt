@@ -1,2 +1,5 @@
 cricket: https://freesound.org/people/Sojan/sounds/400663/
 licence: CC0
+
+bird: https://freesound.org/people/nerdwithnikon/sounds/572420/
+licence: CC0

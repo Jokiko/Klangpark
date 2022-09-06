@@ -202,18 +202,19 @@ public class Park extends Thread{
 
     private void calculateDistance(){
         int c = 0;
+        long timeStart = System.currentTimeMillis();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 for (int k = 0; k < z; k++) {
                     //entry is bird or insect
                     if (park[i][j][k].type() == 1 || park[i][j][k].type() == 2){
                         ThreeDVector soundVector = new ThreeDVector(currentX-i, currentY-j, currentZ-k);
-                        System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
+                        //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
                         c++;
                         if(park[i][j][k].type() == 1){
                             int threshold = 4;
                             int random = (int) (Math.random() * threshold);
-                            System.out.println("Random " + random);
+                            //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playInsectSound(soundVector);
                             }
@@ -221,7 +222,7 @@ public class Park extends Thread{
                         else {
                             int threshold = 4;
                             int random = (int) (Math.random() * threshold);
-                            System.out.println("Random " + random);
+                            //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playBirdSound(soundVector);
                             }
@@ -230,6 +231,8 @@ public class Park extends Thread{
                 }
             }
         }
+        long timeEnd = System.currentTimeMillis();
+        System.out.println("Verlaufszeit der Schleife: " + (timeEnd - timeStart) + " Millisek.");
         System.out.println("Critters: "+ c);
     }
 

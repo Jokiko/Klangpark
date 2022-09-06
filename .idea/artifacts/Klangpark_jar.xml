@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Klangpark:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Klangpark_jar</output-path>
+    <root id="archive" name="Klangpark.jar">
+      <element id="module-output" name="Klangpark" />
+    </root>
+  </artifact>
+</component>
