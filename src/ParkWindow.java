@@ -35,35 +35,43 @@ public class ParkWindow extends JFrame implements KeyListener {
         //check in which direction to go and whether the park's boundaries have already been reached
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W, KeyEvent.VK_UP -> {
-                if (Park.currentZ < z) {
-                    Park.currentZ++;
-                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
+                synchronized(Park.lock) {
+                    if (Park.currentZ < z) {
+                        Park.currentZ++;
+                        position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
+                    }
+                    Park.lineOfSight = 0;
                 }
-                Park.lineOfSight = 0;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
             case KeyEvent.VK_A, KeyEvent.VK_LEFT -> {
-                if (Park.currentX > 0) {
-                    Park.currentX--;
-                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
+                synchronized (Park.lock) {
+                    if (Park.currentX > 0) {
+                        Park.currentX--;
+                        position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
+                    }
+                    Park.lineOfSight = 3;
                 }
-                Park.lineOfSight = 3;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
             case KeyEvent.VK_S, KeyEvent.VK_DOWN -> {
-                if (Park.currentZ > 0) {
-                    Park.currentZ--;
-                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
+                synchronized (Park.lock) {
+                    if (Park.currentZ > 0) {
+                        Park.currentZ--;
+                        position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
+                    }
+                    Park.lineOfSight = 2;
                 }
-                Park.lineOfSight = 2;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
             case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> {
-                if (Park.currentX < x) {
-                    Park.currentX++;
-                    position.setText("Position: "+Park.currentX+ ", "+Park.currentZ);
+                synchronized (Park.lock) {
+                    if (Park.currentX < x) {
+                        Park.currentX++;
+                        position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
+                    }
+                    Park.lineOfSight = 1;
                 }
-                Park.lineOfSight = 1;
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
         }

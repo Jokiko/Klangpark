@@ -32,16 +32,27 @@ public class ConfigWindow extends JFrame implements ActionListener {
         add(zValue);
         add(confirm);
         setVisible(true);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
             System.out.println(xValue.getText() + ", " + yValue.getText() + ", " + zValue.getText());
-            Park testPark = new Park(Integer.parseInt(xValue.getText()), Integer.parseInt(yValue.getText()), Integer.parseInt(zValue.getText()));
-            testPark.start();
-            ParkWindow pw = new ParkWindow("", Integer.parseInt(xValue.getText()), Integer.parseInt(zValue.getText()));
+            int x = Integer.parseInt(xValue.getText());
+            int y = Integer.parseInt(yValue.getText());
+            int z = Integer.parseInt(zValue.getText());
+            Park testPark = new Park(x, y , z);
+            SoundUnit[][][] park = testPark.getPark();
+            ParkThread pt1 = new ParkThread(new ThreadVolume(0, x/2, 0, y, 0, z), park);
+            ParkThread pt2 = new ParkThread(new ThreadVolume(x/2+1, x, 0, y, 0, z), park);
+            pt1.start();
+            pt2.start();
+            //testPark.start();
+            ParkWindow pw = new ParkWindow("", x, z);
             this.dispose();
+            int cores = Runtime.getRuntime().availableProcessors();
+            System.out.println("Kerne: "+cores);
         }
         catch(NumberFormatException | NegativeArraySizeException ex){
             System.out.println("");

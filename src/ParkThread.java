@@ -1,86 +1,19 @@
-import com.adonax.audiocue.AudioCue;
-
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.BrokenBarrierException;
 
-public class Park extends Thread{
+public class ParkThread extends Thread{
 
-    int x;
-    int y;
-    int z;
-    SoundUnit[][][] park;
-    public Clip clip;
-    public static CyclicBarrier barrier = new CyclicBarrier(2);
-    static final Object lock = new Object();
-    static int currentX;
-    static int currentZ;
-    static int currentY;
-    //0: north, 1: east, 2: south, 3: west
-    static int lineOfSight;
-    static final int birdRange = 100;
-    static final int insectRange = 50;
+    private Clip clip;
+    private ThreadVolume volume;
+    private SoundUnit[][][] park;
 
-    public Park(int x, int y, int z){
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        park = new SoundUnit[x][y][z];
-        currentX = x/2;
-        currentZ = z/2;
-        currentY = y>=5 ? 5 : y/2;
-        lineOfSight = 0;
-        initializePark();
-        printPark();
-    }
 
-    //generate critters in the park
-    private void initializePark(){
-        for (int j = 0; j<x; j++){
-            for (int i = 0; i < z; i++) {
-                for (int k = 0; k < y; k++) {
-                    int random = (int) (Math.random() * 100);
-                    //insect
-                    if (random <= 10) {
-                        park[j][k][i] = new SoundUnit(1);
-                    }
-                    //bird
-                    else if (random >= 99) {
-                        park[j][k][i] = new SoundUnit(2);
-                    }
-                    //empty
-                    else {
-                        park[j][k][i] = new SoundUnit(0);
-                    }
-                    //single bird test
-                    /*if(j == x/2 && i == z/2 && k == 2) park[j][k][i] = new SoundUnit(2);
-                    else {
-                        park[j][k][i] = new SoundUnit(0);
-                    }*/
-                    /*(j == x/2 && i == z/2 && k == 2) park[j][k][i] = new SoundUnit(2);
-                    else
-                    if(j == x/4 && i == z/4 && k == 2) park[j][k][i] = new SoundUnit(1);
-                    else {
-                        park[j][k][i] = new SoundUnit(0);
-                    }*/
-                }
-            }
-        }
-    }
 
-    private void printPark(){
-        for (int j = 0; j < x; j++) {
-            for (int i = 0; i < z; i++) {
-                //System.out.print(park[i][j]);
-                System.out.format("%s  ", park[j][0][i].toString());
-            }
-            System.out.println();
-        }
-    }
-
-    public SoundUnit[][][] getPark(){
-        return park;
+    public ParkThread(ThreadVolume tV, SoundUnit[][][] park){
+        volume = tV;
+        this.park = park;
     }
 
     //panning needs to be between -1 (left) and 1 (right)
@@ -100,11 +33,11 @@ public class Park extends Thread{
         double ratio;
         //insect
         if (soundType == 1){
-            ratio = (insectRange - amount)/insectRange;
+            ratio = (Park.insectRange - amount)/Park.insectRange;
         }
         //bird https://stackoverflow.com/questions/40514910/set-volume-of-java-clip
         else {
-            ratio = (birdRange - amount)/birdRange;
+            ratio = (Park.birdRange - amount)/Park.birdRange;
         }
         volume = 20f * (float) Math.log10(ratio);
         return volume;
@@ -116,12 +49,14 @@ public class Park extends Thread{
         ThreeDVector tempVector;
         double scalarProduct;
         double amount1, amount2, angle;
-        switch (lineOfSight) {
-            case 0 -> tempVector = new ThreeDVector(-1,0,0);
-            case 2 -> tempVector = new ThreeDVector(1,0,0);
-            case 1 -> tempVector = new ThreeDVector(0,0,1);
-            case 3 -> tempVector = new ThreeDVector(0,0,-1);
-            default -> throw new IllegalStateException("Unexpected value: " + lineOfSight);
+        synchronized(Park.lock) {
+            switch (Park.lineOfSight) {
+                case 0 -> tempVector = new ThreeDVector(-1, 0, 0);
+                case 2 -> tempVector = new ThreeDVector(1, 0, 0);
+                case 1 -> tempVector = new ThreeDVector(0, 0, 1);
+                case 3 -> tempVector = new ThreeDVector(0, 0, -1);
+                default -> throw new IllegalStateException("Unexpected value: " + Park.lineOfSight);
+            }
         }
         //calculate angle of incoming sound vector in relation to lineOfSight
         scalarProduct = soundVector.x() * tempVector.x() + soundVector.z() * tempVector.z();
@@ -143,7 +78,7 @@ public class Park extends Thread{
         System.out.println("Zwitscher");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
-        if(vectorLength <= birdRange) {
+        if(vectorLength <= Park.birdRange) {
             try {
                 int random = (int) (Math.random() * 600);
                 Thread.sleep(random);
@@ -173,7 +108,7 @@ public class Park extends Thread{
                 float f = getSoundPanning(soundVector);
                 pan.setValue(f);
 
-                 //TO-DO: random pitch shifting
+                //TO-DO: random pitch shifting
                 clip.loop(0);
                 //myAudioCue.play((double) value, (double) value2, 1.0, 0);
                 //myAudioCue.start(handle);
@@ -190,7 +125,7 @@ public class Park extends Thread{
         System.out.println("Zirp");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
-        if(vectorLength <= insectRange) {
+        if(vectorLength <= Park.insectRange) {
             try {
                 int random = (int) (Math.random() * 600);
                 Thread.sleep(random);
@@ -231,50 +166,51 @@ public class Park extends Thread{
         }
     }
 
-    private void calculateDistance(){
-        int c = 0;
-        long timeStart = System.currentTimeMillis();
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                for (int k = 0; k < z; k++) {
-                    //entry is bird or insect
-                    if (park[i][j][k].type() == 1 || park[i][j][k].type() == 2){
-                        ThreeDVector soundVector = new ThreeDVector(currentX-i, currentY-j, currentZ-k);
-                        //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
-                        c++;
-                        if(park[i][j][k].type() == 1){
-                            int threshold = 4;
-                            int random = (int) (Math.random() * threshold);
-                            //System.out.println("Random " + random);
-                            if(random >= threshold-1) {
-                                playInsectSound(soundVector);
+
+    @Override
+    public void run() {
+        while(!Thread.interrupted()){
+            long timeStart = System.currentTimeMillis();
+            for (int i = volume.xStart(); i < volume.xEnd(); i++) {
+                for (int j = volume.yStart(); j < volume.yEnd(); j++) {
+                    for (int k = volume.zStart(); k < volume.zEnd(); k++) {
+                        //entry is bird or insect
+                        if (park[i][j][k].type() == 1 || park[i][j][k].type() == 2){
+                            ThreeDVector soundVector;
+                            synchronized(Park.lock) {
+                                soundVector = new ThreeDVector(Park.currentX - i, Park.currentY - j, Park.currentZ - k);
                             }
-                        }
-                        else {
-                            int threshold = 4;
-                            int random = (int) (Math.random() * threshold);
-                            //System.out.println("Random " + random);
-                            if(random >= threshold-1) {
-                                playBirdSound(soundVector);
+                            //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
+                            //c++;
+                            if(park[i][j][k].type() == 1){
+                                int threshold = 4;
+                                int random = (int) (Math.random() * threshold);
+                                //System.out.println("Random " + random);
+                                if(random >= threshold-1) {
+                                    playInsectSound(soundVector);
+                                }
+                            }
+                            else {
+                                int threshold = 4;
+                                int random = (int) (Math.random() * threshold);
+                                //System.out.println("Random " + random);
+                                if(random >= threshold-1) {
+                                    playBirdSound(soundVector);
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        long timeEnd = System.currentTimeMillis();
-        System.out.println("Verlaufszeit der Schleife: " + (timeEnd - timeStart) + " Millisek.");
-        System.out.println("Critters: "+ c);
-    }
-
-    public void run() {
-        while(!Thread.interrupted()){
-            calculateDistance();
-            /*try {
-                sleep(1000);
+            try {
+                Park.barrier.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+            long timeEnd = System.currentTimeMillis();
+            System.out.println("Verlaufszeit der Schleife in " + this.getId() +": "+ (timeEnd - timeStart) + " Millisek.");
         }
     }
 
