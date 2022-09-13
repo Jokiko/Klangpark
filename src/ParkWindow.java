@@ -40,7 +40,7 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentZ++;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    Park.lineOfSight = 0;
+                    //Park.lineOfSight = 0;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -50,7 +50,7 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentX--;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    Park.lineOfSight = 3;
+                    //Park.lineOfSight = 3;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -60,7 +60,7 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentZ--;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    Park.lineOfSight = 2;
+                    //Park.lineOfSight = 2;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -70,9 +70,33 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentX++;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    Park.lineOfSight = 1;
+                    //Park.lineOfSight = 1;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
+            }
+            //turn clockwise
+            case KeyEvent.VK_E -> {
+                synchronized(Park.lock) {
+                    switch (Park.lineOfSight) {
+                        case 0 -> Park.lineOfSight = 1;
+                        case 1 -> Park.lineOfSight = 2;
+                        case 2 -> Park.lineOfSight = 3;
+                        case 3 -> Park.lineOfSight = 0;
+                    }
+
+                }
+            }
+            //turn counter-clockwise
+            case KeyEvent.VK_Q -> {
+                synchronized(Park.lock) {
+                    switch (Park.lineOfSight) {
+                        case 0 -> Park.lineOfSight = 3;
+                        case 1 -> Park.lineOfSight = 0;
+                        case 2 -> Park.lineOfSight = 1;
+                        case 3 -> Park.lineOfSight = 2;
+                    }
+
+                }
             }
         }
 

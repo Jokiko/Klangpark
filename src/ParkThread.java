@@ -169,6 +169,8 @@ public class ParkThread extends Thread{
 
     @Override
     public void run() {
+        System.out.println("Start: "+volume.xStart()+ ", " + volume.yStart() + ", "+ volume.zStart()+ ", Ende: "+ volume.xEnd() + ", " + volume.yEnd() + ", " + volume.zEnd());
+
         while(!Thread.interrupted()){
             long timeStart = System.currentTimeMillis();
             for (int i = volume.xStart(); i < volume.xEnd(); i++) {

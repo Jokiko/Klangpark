@@ -12,7 +12,7 @@ public class Park extends Thread{
     int z;
     SoundUnit[][][] park;
     public Clip clip;
-    public static CyclicBarrier barrier = new CyclicBarrier(2);
+    public static CyclicBarrier barrier = new CyclicBarrier(8);
     static final Object lock = new Object();
     static int currentX;
     static int currentZ;
@@ -37,6 +37,7 @@ public class Park extends Thread{
 
     //generate critters in the park
     private void initializePark(){
+        int c = 0;
         for (int j = 0; j<x; j++){
             for (int i = 0; i < z; i++) {
                 for (int k = 0; k < y; k++) {
@@ -44,10 +45,12 @@ public class Park extends Thread{
                     //insect
                     if (random <= 10) {
                         park[j][k][i] = new SoundUnit(1);
+                        c++;
                     }
                     //bird
                     else if (random >= 99) {
                         park[j][k][i] = new SoundUnit(2);
+                        c++;
                     }
                     //empty
                     else {
@@ -67,6 +70,7 @@ public class Park extends Thread{
                 }
             }
         }
+        System.out.println("Anzahl Tiere im Park: "+ c);
     }
 
     private void printPark(){
