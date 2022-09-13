@@ -52,6 +52,9 @@ public class ConfigWindow extends JFrame implements ActionListener {
             int z = Integer.parseInt(zValue.getText());
             int bird = Integer.parseInt(birdValue.getText());
             int insect = Integer.parseInt(insectValue.getText());
+            if(x*y*z < bird + insect){
+                throw new IllegalArgumentException("Nicht mehr Tiere als Platz im Park!");
+            }
             Park testPark = new Park(x, y , z, bird, insect);
             SoundUnit[][][] park = testPark.getPark();
             ParkThread pt1 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, 0, z/2), park);
@@ -76,8 +79,8 @@ public class ConfigWindow extends JFrame implements ActionListener {
             int cores = Runtime.getRuntime().availableProcessors();
             System.out.println("Kerne: "+cores);
         }
-        catch(NumberFormatException | NegativeArraySizeException ex){
-            System.out.println("");
+        catch(IllegalArgumentException | NegativeArraySizeException ex){
+            System.out.println(ex.getMessage());
         }
     }
 }
