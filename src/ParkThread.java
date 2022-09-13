@@ -110,9 +110,6 @@ public class ParkThread extends Thread{
 
                 //TO-DO: random pitch shifting
                 clip.loop(0);
-                //myAudioCue.play((double) value, (double) value2, 1.0, 0);
-                //myAudioCue.start(handle);
-                //myAudioCue.releaseInstance(handle);
             } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {

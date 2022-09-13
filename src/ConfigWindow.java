@@ -8,6 +8,8 @@ public class ConfigWindow extends JFrame implements ActionListener {
     JFormattedTextField xValue;
     JTextField yValue;
     JTextField zValue;
+    JTextField birdValue;
+    JTextField insectValue;
 
 
     public static void main(String[] args) {
@@ -18,10 +20,12 @@ public class ConfigWindow extends JFrame implements ActionListener {
         super();
         setSize(300,200);
         setTitle("Parkdimensionen");
-        setLayout(new GridLayout(4,1));
+        setLayout(new GridLayout(6,1));
         xValue = new JFormattedTextField("200");
         yValue = new JTextField("10");
         zValue = new JTextField("200");
+        birdValue = new JTextField("10");
+        insectValue = new JTextField("20");
         JButton confirm = new JButton("Erstelle Park");
         confirm.addActionListener(this);
         add(new JLabel("x-Wert:"));
@@ -30,6 +34,10 @@ public class ConfigWindow extends JFrame implements ActionListener {
         add(yValue);
         add(new JLabel("z-Wert:"));
         add(zValue);
+        add(new JLabel("Anzahl Vögel:"));
+        add(birdValue);
+        add(new JLabel("Anzahl Grillen:"));
+        add(insectValue);
         add(confirm);
         setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,7 +50,9 @@ public class ConfigWindow extends JFrame implements ActionListener {
             int x = Integer.parseInt(xValue.getText());
             int y = Integer.parseInt(yValue.getText());
             int z = Integer.parseInt(zValue.getText());
-            Park testPark = new Park(x, y , z);
+            int bird = Integer.parseInt(birdValue.getText());
+            int insect = Integer.parseInt(insectValue.getText());
+            Park testPark = new Park(x, y , z, bird, insect);
             SoundUnit[][][] park = testPark.getPark();
             ParkThread pt1 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, 0, z/2), park);
             ParkThread pt2 = new ParkThread(new ThreadVolume(x/2, x, 0, y/2, 0, z/2), park);
