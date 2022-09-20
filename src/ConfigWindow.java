@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 public class ConfigWindow extends JFrame implements ActionListener {
 
+    JTextField parkUnit;
     JFormattedTextField xValue;
     JTextField yValue;
     JTextField zValue;
@@ -20,19 +21,22 @@ public class ConfigWindow extends JFrame implements ActionListener {
         super();
         setSize(350,200);
         setTitle("Konfiguration des Klangparks");
-        setLayout(new GridLayout(6,1));
-        xValue = new JFormattedTextField("200");
-        yValue = new JTextField("10");
-        zValue = new JTextField("200");
+        setLayout(new GridLayout(7,1));
+        parkUnit = new JTextField("10");
+        xValue = new JFormattedTextField("20");
+        yValue = new JTextField("1");
+        zValue = new JTextField("20");
         birdValue = new JTextField("10");
         insectValue = new JTextField("20");
         JButton confirm = new JButton("Erstelle Park");
         confirm.addActionListener(this);
-        add(new JLabel("x-Wert:"));
+        add(new JLabel("Größe einer Parkeinheit:"));
+        add(parkUnit);
+        add(new JLabel("x-Wert (in Parkeinheiten):"));
         add(xValue);
-        add(new JLabel("y-Wert:"));
+        add(new JLabel("y-Wert (in Parkeinheiten):"));
         add(yValue);
-        add(new JLabel("z-Wert:"));
+        add(new JLabel("z-Wert (in Parkeinhieten):"));
         add(zValue);
         add(new JLabel("Anzahl Vögel:"));
         add(birdValue);
@@ -47,15 +51,17 @@ public class ConfigWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             System.out.println(xValue.getText() + ", " + yValue.getText() + ", " + zValue.getText());
+            int pU = Integer.parseInt(parkUnit.getText());
             int x = Integer.parseInt(xValue.getText());
             int y = Integer.parseInt(yValue.getText());
             int z = Integer.parseInt(zValue.getText());
             int bird = Integer.parseInt(birdValue.getText());
             int insect = Integer.parseInt(insectValue.getText());
-            if(x*y*z < bird + insect){
+            if((x*y*z)*pU < bird + insect){
                 throw new IllegalArgumentException("Nicht mehr Tiere als Platz im Park!");
             }
 
+            Main.parkUnit = pU;
             Main.x = x;
             Main.y = y;
             Main.z = z;

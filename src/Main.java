@@ -1,7 +1,10 @@
-import java.util.concurrent.Semaphore;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class Main {
 
+    static int parkUnit;
     static int x;
     static int y;
     static int z;
@@ -9,36 +12,44 @@ public class Main {
     static int insect;
     static final Semaphore configured = new Semaphore(0);
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         ConfigWindow cw = new ConfigWindow();
+        //only go on if configurations are set
         configured.acquire();
 
-        Park testPark = new Park(x, y , z, bird, insect);
+        Park testPark = new Park(x*parkUnit, y*parkUnit , z*parkUnit, bird, insect);
         SoundUnit[][][] park = testPark.getPark();
-        ParkThread pt1 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, 0, z/2), park);
-        ParkThread pt2 = new ParkThread(new ThreadVolume(x/2, x, 0, y/2, 0, z/2), park);
-        ParkThread pt3 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, z/2, z), park);
-        ParkThread pt4 = new ParkThread(new ThreadVolume(x/2, x, 0, y/2, z/2, z), park);
-        ParkThread pt5 = new ParkThread(new ThreadVolume(0, x/2, y/2, y, 0, z/2), park);
-        ParkThread pt6 = new ParkThread(new ThreadVolume(x/2, x, y/2, y, 0, z/2), park);
-        ParkThread pt7 = new ParkThread(new ThreadVolume(0, x/2, y/2, y, z/2, z), park);
-        ParkThread pt8 = new ParkThread(new ThreadVolume(x/2, x, y/2, y, z/2, z), park);
-        pt1.start();
-        pt2.start();
-        pt3.start();
-        pt4.start();
-        pt5.start();
-        pt6.start();
-        pt7.start();
-        pt8.start();
-        //testPark.start();
-        ParkWindow pw = new ParkWindow("", x, z);
-        /*
-            Park testPark = new Park(x, y, z);
-            testPark.start();
-            ParkWindow pw = new ParkWindow("", x, z);
-        */
+        ParkWindow pw = new ParkWindow("", x*parkUnit, z*parkUnit);
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<?>> futures = new ArrayList<Future<?>>();
+
+        while(true) {
+            long timeStart = System.currentTimeMillis();
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+                    for (int k = 0; k < z; k++) {
+                        ThreadVolume tV = new ThreadVolume(i * parkUnit, (i + 1) * parkUnit,
+                                j * parkUnit, (j + 1) * parkUnit,
+                                k * parkUnit, (k + 1) * parkUnit);
+                        Runnable runnable = new ParkTask(tV, park);
+                        Future<?> f = executorService.submit(runnable);
+                        futures.add(f);
+                        /*System.out.println("Erschaffe Task: x von "+i * parkUnit+ " bis "+(i + 1) * parkUnit+ ",y von "
+                                +j * parkUnit+ " bis "+(j + 1) * parkUnit+ ",z von "
+                                +k * parkUnit+ " bis "+(k + 1) * parkUnit);*/
+                    }
+                }
+            }
+
+            //source: https://stackoverflow.com/questions/33845405/how-to-check-if-all-tasks-running-on-executorservice-are-completed
+            for(Future<?> future : futures)
+                future.get();
+
+            long timeEnd = System.currentTimeMillis();
+            System.out.println("Verlaufszeit der Schleife: "+ (timeEnd - timeStart) + " Millisek.");
+        }
+
     }
 
 }
