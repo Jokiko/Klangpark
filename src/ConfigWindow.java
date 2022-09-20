@@ -18,8 +18,8 @@ public class ConfigWindow extends JFrame implements ActionListener {
 
     public ConfigWindow(){
         super();
-        setSize(300,200);
-        setTitle("Parkdimensionen");
+        setSize(350,200);
+        setTitle("Konfiguration des Klangparks");
         setLayout(new GridLayout(6,1));
         xValue = new JFormattedTextField("200");
         yValue = new JTextField("10");
@@ -55,26 +55,14 @@ public class ConfigWindow extends JFrame implements ActionListener {
             if(x*y*z < bird + insect){
                 throw new IllegalArgumentException("Nicht mehr Tiere als Platz im Park!");
             }
-            Park testPark = new Park(x, y , z, bird, insect);
-            SoundUnit[][][] park = testPark.getPark();
-            ParkThread pt1 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, 0, z/2), park);
-            ParkThread pt2 = new ParkThread(new ThreadVolume(x/2, x, 0, y/2, 0, z/2), park);
-            ParkThread pt3 = new ParkThread(new ThreadVolume(0, x/2, 0, y/2, z/2, z), park);
-            ParkThread pt4 = new ParkThread(new ThreadVolume(x/2, x, 0, y/2, z/2, z), park);
-            ParkThread pt5 = new ParkThread(new ThreadVolume(0, x/2, y/2, y, 0, z/2), park);
-            ParkThread pt6 = new ParkThread(new ThreadVolume(x/2, x, y/2, y, 0, z/2), park);
-            ParkThread pt7 = new ParkThread(new ThreadVolume(0, x/2, y/2, y, z/2, z), park);
-            ParkThread pt8 = new ParkThread(new ThreadVolume(x/2, x, y/2, y, z/2, z), park);
-            pt1.start();
-            pt2.start();
-            pt3.start();
-            pt4.start();
-            pt5.start();
-            pt6.start();
-            pt7.start();
-            pt8.start();
-            //testPark.start();
-            ParkWindow pw = new ParkWindow("", x, z);
+
+            Main.x = x;
+            Main.y = y;
+            Main.z = z;
+            Main.bird = bird;
+            Main.insect = insect;
+            Main.configured.release();
+
             this.dispose();
             int cores = Runtime.getRuntime().availableProcessors();
             System.out.println("Kerne: "+cores);

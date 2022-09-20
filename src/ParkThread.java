@@ -44,17 +44,17 @@ public class ParkThread extends Thread{
     }
 
     //calculate angle of incoming sound vector
-    private float getSoundPanning(ThreeDVector soundVector){
+    private float getSoundPanning(Vector3D soundVector){
         float pan;
-        ThreeDVector tempVector;
+        Vector3D tempVector;
         double scalarProduct;
         double amount1, amount2, angle;
         synchronized(Park.lock) {
             switch (Park.lineOfSight) {
-                case 0 -> tempVector = new ThreeDVector(-1, 0, 0);
-                case 2 -> tempVector = new ThreeDVector(1, 0, 0);
-                case 1 -> tempVector = new ThreeDVector(0, 0, 1);
-                case 3 -> tempVector = new ThreeDVector(0, 0, -1);
+                case 0 -> tempVector = new Vector3D(-1, 0, 0);
+                case 2 -> tempVector = new Vector3D(1, 0, 0);
+                case 1 -> tempVector = new Vector3D(0, 0, 1);
+                case 3 -> tempVector = new Vector3D(0, 0, -1);
                 default -> throw new IllegalStateException("Unexpected value: " + Park.lineOfSight);
             }
         }
@@ -74,7 +74,7 @@ public class ParkThread extends Thread{
     }
 
     //play bird sound with given modifiers
-    private void playBirdSound(ThreeDVector soundVector){
+    private void playBirdSound(Vector3D soundVector){
         System.out.println("Zwitscher");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
@@ -87,15 +87,6 @@ public class ParkThread extends Thread{
                 AudioInputStream ais = AudioSystem.getAudioInputStream(url);
                 clip = AudioSystem.getClip();
                 clip.open(ais);
-
-                /*AudioCue myAudioCue;
-                myAudioCue = AudioCue.makeStereoCue(url, 4);
-                myAudioCue.open();
-                int handle = myAudioCue.play();
-                float value = getSoundVolume(vectorLength, 1);
-                myAudioCue.setVolume(handle, value);
-                float value2 = getSoundPanning(soundVector);
-                myAudioCue.setPan(handle, value);*/
 
                 //setting the sound's volume
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -118,7 +109,7 @@ public class ParkThread extends Thread{
         }
     }
 
-    private void playInsectSound(ThreeDVector soundVector){
+    private void playInsectSound(Vector3D soundVector){
         System.out.println("Zirp");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         System.out.println(vectorLength);
@@ -131,15 +122,6 @@ public class ParkThread extends Thread{
                 AudioInputStream ais = AudioSystem.getAudioInputStream(url);
                 clip = AudioSystem.getClip();
                 clip.open(ais);
-
-                /*AudioCue myAudioCue;
-                myAudioCue = AudioCue.makeStereoCue(url, 4);
-                myAudioCue.open();
-                int handle = myAudioCue.obtainInstance();
-                float value = getSoundVolume(vectorLength, 1);
-                myAudioCue.setVolume(handle, value);
-                value = getSoundPanning(soundVector);
-                myAudioCue.setPan(handle, value);*/
 
                 //setting the sound's volume
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -175,9 +157,9 @@ public class ParkThread extends Thread{
                     for (int k = volume.zStart(); k < volume.zEnd(); k++) {
                         //entry is bird or insect
                         if (park[i][j][k].type() == 1 || park[i][j][k].type() == 2){
-                            ThreeDVector soundVector;
+                            Vector3D soundVector;
                             synchronized(Park.lock) {
-                                soundVector = new ThreeDVector(Park.currentX - i, Park.currentY - j, Park.currentZ - k);
+                                soundVector = new Vector3D(Park.currentX - i, Park.currentY - j, Park.currentZ - k);
                             }
                             //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
                             //c++;
