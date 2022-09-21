@@ -1,7 +1,10 @@
 import javax.sound.sampled.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.BrokenBarrierException;
+
+import static javax.sound.sampled.AudioSystem.getAudioInputStream;
 
 public class ParkTask implements Runnable{
 
@@ -71,6 +74,27 @@ public class ParkTask implements Runnable{
         return pan;
     }
 
+    //change pitch depending on height of the sound's source
+    private AudioFormat getPitchShiftedFormat(AudioFormat inFormat, Vector3D soundVector){
+        double mod = 1;
+        if (soundVector.y() > 0 ){
+            mod -= (soundVector.y() * 0.1);
+        }
+        else if (soundVector.y() < 0){
+            double py = Main.y*Main.parkUnit; //TO-DO: Change this to getHeight later
+            mod += ((double) 3/py*(soundVector.y()*-1));
+        }
+
+        float rate = inFormat.getSampleRate();
+        //System.out.println("Sample Rate: "+rate);
+        //System.out.println("Sample Rate nachher: "+rate*mod);
+
+        //return new AudioFormat with modified sampleRate and frameRate
+        return new AudioFormat(inFormat.getEncoding(), (float) (rate*mod), inFormat.getSampleSizeInBits(),
+                inFormat.getChannels(), inFormat.getFrameSize(), (float) (rate*mod),
+                inFormat.isBigEndian());
+    }
+
     //play bird sound with given modifiers
     private void playBirdSound(Vector3D soundVector){
         System.out.println("Zwitscher");
@@ -82,9 +106,14 @@ public class ParkTask implements Runnable{
                 Thread.sleep(random);
                 URL url = Main.class.getResource("/sounds/cardinal.wav");
                 assert url != null;
+
+                //setting the sound's pitch
                 AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+                AudioFormat format = getPitchShiftedFormat(ais.getFormat(), soundVector);
+                AudioInputStream ais2 = getAudioInputStream(format, ais);
+
                 clip = AudioSystem.getClip();
-                clip.open(ais);
+                clip.open(ais2);
 
                 //setting the sound's volume
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -117,9 +146,14 @@ public class ParkTask implements Runnable{
                 Thread.sleep(random);
                 URL url = Main.class.getResource("/sounds/cricket.wav");
                 assert url != null;
+
+                //setting the sound's pitch
                 AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+                AudioFormat format = getPitchShiftedFormat(ais.getFormat(), soundVector);
+                AudioInputStream ais2 = getAudioInputStream(format, ais);
+
                 clip = AudioSystem.getClip();
-                clip.open(ais);
+                clip.open(ais2);
 
                 //setting the sound's volume
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);

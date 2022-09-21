@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;
 
-public class Park extends Thread{
+public class Park{
 
     int x;
     int y;
@@ -99,6 +99,10 @@ public class Park extends Thread{
             }
             System.out.println();
         }
+    }
+
+    public int getHeight(){
+        return y;
     }
 
     public SoundUnit[][][] getPark(){
