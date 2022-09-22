@@ -12,7 +12,7 @@ public class ParkTask implements Runnable{
 
     public ParkTask(ThreadVolume tV){
         volume = tV;
-        this.park = Park.getPark();
+        this.park = Park.getInstance().getPark();
     }
 
     //panning needs to be between -1 (left) and 1 (right)
@@ -74,7 +74,7 @@ public class ParkTask implements Runnable{
             mod -= (soundVector.y() * 0.1);
         }
         else if (soundVector.y() < 0){
-            double py = Main.y*Main.parkUnit; //TO-DO: Change this to getHeight later
+            double py = Park.getInstance().getHeight(); //TO-DO: Change this to getHeight later
             mod += ((double) 3/py*(soundVector.y()*-1));
         }
 

@@ -11,7 +11,7 @@ public class Park{
     int x;
     int y;
     int z;
-    private static SoundUnit[][][] park;
+    private SoundUnit[][][] park;
     public static CyclicBarrier barrier = new CyclicBarrier(8);
     static final Object lock = new Object();
     static int currentX;
@@ -105,11 +105,15 @@ public class Park{
         }
     }
 
+    public static Park getInstance(){
+        return klangpark;
+    }
+
     public int getHeight(){
         return y;
     }
 
-    public static SoundUnit[][][] getPark(){
+    public SoundUnit[][][] getPark(){
         return park;
     }
 
