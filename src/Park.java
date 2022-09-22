@@ -6,11 +6,12 @@ import java.util.concurrent.CyclicBarrier;
 
 public class Park{
 
+    private static Park klangpark = null;
+
     int x;
     int y;
     int z;
-    SoundUnit[][][] park;
-    public Clip clip;
+    private static SoundUnit[][][] park;
     public static CyclicBarrier barrier = new CyclicBarrier(8);
     static final Object lock = new Object();
     static int currentX;
@@ -18,13 +19,13 @@ public class Park{
     static int currentY;
     //0: north, 1: east, 2: south, 3: west
     static int lineOfSight;
-    static final int birdRange = 100;
+    static final int birdRange = 50;
     static final int insectRange = 50;
     static int numberOfBirds;
     static int numberOfInsects;
 
 
-    public Park(int x, int y, int z, int bird, int insect){
+    private Park(int x, int y, int z, int bird, int insect){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -50,7 +51,6 @@ public class Park{
                 }
             }
         }
-        int[][][]  tempPark = new int[x][y][z];
         Random rand = new Random();
         //set random pattern of birds
         for (int i = 0; i < numberOfBirds; i++) {
@@ -59,9 +59,8 @@ public class Park{
                 int birdX = rand.nextInt(x);
                 int birdY = rand.nextInt(y);
                 int birdZ = rand.nextInt(z);
-                if (tempPark[birdX][birdY][birdZ] == 0){
+                if (park[birdX][birdY][birdZ].type() == 0){
                     park[birdX][birdY][birdZ] = new SoundUnit(2);
-                    tempPark[birdX][birdY][birdZ] = 1;
                     occupied = false;
                 }
             }
@@ -74,15 +73,13 @@ public class Park{
                 int insX = rand.nextInt(x);
                 int insY = rand.nextInt(y);
                 int insZ = rand.nextInt(z);
-                if (tempPark[insX][insY][insZ] == 0){
+                if (park[insX][insY][insZ].type() == 0){
                     park[insX][insY][insZ] = new SoundUnit(1);
-                    tempPark[insX][insY][insZ] = 1;
                     occupied = false;
                 }
             }
             while (occupied);
         }
-
         //single bird test
         //park[x/2][2][z/2] = new SoundUnit(2);
 
@@ -90,6 +87,13 @@ public class Park{
         //park[x/2][2][z/2] = new SoundUnit(2);
         // park[x/4][2][z/4] = new SoundUnit(1);
     }
+
+    public static void createPark(int x, int y, int z, int bird, int insect){
+        if(klangpark == null){
+            klangpark = new Park(x,y,z,bird,insect);
+        }
+    }
+
 
     private void printPark(){
         for (int j = 0; j < x; j++) {
@@ -105,7 +109,7 @@ public class Park{
         return y;
     }
 
-    public SoundUnit[][][] getPark(){
+    public static SoundUnit[][][] getPark(){
         return park;
     }
 

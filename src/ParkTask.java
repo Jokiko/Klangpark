@@ -1,8 +1,6 @@
 import javax.sound.sampled.*;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.BrokenBarrierException;
 
 import static javax.sound.sampled.AudioSystem.getAudioInputStream;
 
@@ -12,9 +10,9 @@ public class ParkTask implements Runnable{
     private ThreadVolume volume;
     private SoundUnit[][][] park;
 
-    public ParkTask(ThreadVolume tV, SoundUnit[][][] park){
+    public ParkTask(ThreadVolume tV){
         volume = tV;
-        this.park = park;
+        this.park = Park.getPark();
     }
 
     //panning needs to be between -1 (left) and 1 (right)
@@ -65,11 +63,6 @@ public class ParkTask implements Runnable{
         amount2 = Math.sqrt((Math.pow(tempVector.x(), 2)+Math.pow(0, 2)+Math.pow(tempVector.z(), 2)));
         angle = Math.toDegrees(Math.acos(scalarProduct/(amount1*amount2)));
         System.out.println(soundVector.x()+ ", "+ soundVector.z()+ ", "+angle);
-        /*switch (lineOfSight){
-            case 1:
-                pan = convertAngleToPan(angle);
-                break;
-        }*/
         pan = convertAngleToPan(angle);
         return pan;
     }
@@ -128,9 +121,7 @@ public class ParkTask implements Runnable{
 
                 //TO-DO: random pitch shifting
                 clip.loop(0);
-            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -169,9 +160,7 @@ public class ParkTask implements Runnable{
                 //TO-DO: random pitch shifting
                 clip.loop(0);
                 //myAudioCue.start(handle);
-            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -189,18 +178,15 @@ public class ParkTask implements Runnable{
                             soundVector = new Vector3D(Park.currentX - i, Park.currentY - j, Park.currentZ - k);
                         }
                         //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
-                        //c++;
+                        int threshold = 4;
+                        int random = (int) (Math.random() * threshold);
                         if(park[i][j][k].type() == 1){
-                            int threshold = 4;
-                            int random = (int) (Math.random() * threshold);
                             //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playInsectSound(soundVector);
                             }
                         }
                         else {
-                            int threshold = 4;
-                            int random = (int) (Math.random() * threshold);
                             //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playBirdSound(soundVector);

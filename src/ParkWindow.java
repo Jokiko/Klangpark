@@ -1,13 +1,13 @@
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 //source: https://stackoverflow.com/questions/10876491/how-to-use-keylistener
 public class ParkWindow extends JFrame implements KeyListener {
 
     JLabel position;
+    JLabel direction;
     int x;
     int z;
 
@@ -16,9 +16,13 @@ public class ParkWindow extends JFrame implements KeyListener {
         this.x = x;
         this.z = z;
         this.setTitle("Klangpark");
-        JPanel p = new JPanel();
+        JPanel p = new JPanel(new GridLayout(2, 3));
         position = new JLabel("Position: "+Park.currentX+ ", "+Park.currentZ);
+        direction = new JLabel("Blickrichtung: Norden");
+        position.setHorizontalAlignment(JLabel.CENTER);
+        direction.setHorizontalAlignment(JLabel.CENTER);
         p.add(position);
+        p.add(direction);
         add(p);
         addKeyListener(this);
         setSize(300, 100);
@@ -40,7 +44,6 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentZ++;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    //Park.lineOfSight = 0;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -50,7 +53,6 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentX--;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    //Park.lineOfSight = 3;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -60,7 +62,6 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentZ--;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    //Park.lineOfSight = 2;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -70,7 +71,6 @@ public class ParkWindow extends JFrame implements KeyListener {
                         Park.currentX++;
                         position.setText("Position: " + Park.currentX + ", " + Park.currentZ);
                     }
-                    //Park.lineOfSight = 1;
                 }
                 System.out.println("Standpunkt: " + Park.currentX + "/" + Park.currentZ);
             }
@@ -78,28 +78,49 @@ public class ParkWindow extends JFrame implements KeyListener {
             case KeyEvent.VK_E -> {
                 synchronized(Park.lock) {
                     switch (Park.lineOfSight) {
-                        case 0 -> Park.lineOfSight = 1;
-                        case 1 -> Park.lineOfSight = 2;
-                        case 2 -> Park.lineOfSight = 3;
-                        case 3 -> Park.lineOfSight = 0;
+                        case 0 -> {
+                            Park.lineOfSight = 1;
+                            direction.setText("Blickrichtung: Osten");
+                        }
+                        case 1 -> {
+                            Park.lineOfSight = 2;
+                            direction.setText("Blickrichtung: Süden");
+                        }
+                        case 2 -> {
+                            Park.lineOfSight = 3;
+                            direction.setText("Blickrichtung: Westen");
+                        }
+                        case 3 -> {
+                            Park.lineOfSight = 0;
+                            direction.setText("Blickrichtung: Norden");
+                        }
                     }
-
                 }
             }
             //turn counter-clockwise
             case KeyEvent.VK_Q -> {
                 synchronized(Park.lock) {
                     switch (Park.lineOfSight) {
-                        case 0 -> Park.lineOfSight = 3;
-                        case 1 -> Park.lineOfSight = 0;
-                        case 2 -> Park.lineOfSight = 1;
-                        case 3 -> Park.lineOfSight = 2;
+                        case 0 -> {
+                            Park.lineOfSight = 3;
+                            direction.setText("Blickrichtung: Westen");
+                        }
+                        case 1 -> {
+                            Park.lineOfSight = 0;
+                            direction.setText("Blickrichtung: Norden");
+                        }
+                        case 2 -> {
+                            Park.lineOfSight = 1;
+                            direction.setText("Blickrichtung: Osten");
+                        }
+                        case 3 -> {
+                            Park.lineOfSight = 2;
+                            direction.setText("Blickrichtung: Süden");
+                        }
                     }
-
                 }
             }
         }
-
     }
 
     @Override

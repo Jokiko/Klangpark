@@ -26,8 +26,8 @@ public class ConfigWindow extends JFrame implements ActionListener {
         xValue = new JFormattedTextField("20");
         yValue = new JTextField("1");
         zValue = new JTextField("20");
-        birdValue = new JTextField("10");
-        insectValue = new JTextField("20");
+        birdValue = new JTextField("5");
+        insectValue = new JTextField("10");
         JButton confirm = new JButton("Erstelle Park");
         confirm.addActionListener(this);
         add(new JLabel("Größe einer Parkeinheit:"));
