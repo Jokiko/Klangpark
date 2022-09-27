@@ -1,0 +1,220 @@
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="DC.Type" content="concept">
+      <meta name="DC.Title" content="Records">
+      <meta name="abstract" content='JDK 14 introduces records, which are a new kind of type declaration. Like an enum, a record is a restricted form of a class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and only the most fundamental methods such as constructors and accessors.'>
+      <meta name="description" content='JDK 14 introduces records, which are a new kind of type declaration. Like an enum, a record is a restricted form of a class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and only the most fundamental methods such as constructors and accessors.'>
+      <meta name="DC.Publisher" content="March2020">
+      <meta name="DC.Format" content="XHTML">
+      <meta name="DC.Identifier" content="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263">
+      <meta name="DC.Language" content="en-US">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="abstract" content='JDK 14 introduces records, which are a new kind of type declaration. Like an enum, a record is a restricted form of a class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and only the most fundamental methods such as constructors and accessors.'>
+      <meta name="description" content='JDK 14 introduces records, which are a new kind of type declaration. Like an enum, a record is a restricted form of a class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and only the most fundamental methods such as constructors and accessors.'>
+      <title>Records</title>
+      <meta property="og:site_name" content="Oracle Help Center">
+      <meta property="og:title" content="Java Language Updates">
+      <meta property="og:description" content='JDK 14 introduces records, which are a new kind of type declaration. Like an enum, a record is a restricted form of a class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and only the most fundamental methods such as constructors and accessors.'>
+      <link rel="stylesheet" href="/sp_common/book-template/ohc-book-template/css/book.css">
+      <link rel="shortcut icon" href="/sp_common/book-template/ohc-common/img/favicon.ico">
+      <meta name="application-name" content="Java Language Updates">
+      <meta name="generator" content="DITA Open Toolkit version 1.8.5 (Mode = doc)">
+      <meta name="plugin" content="SP_docbuilder HTML plugin release 18.2.2">
+      <link rel="alternate" href="java-se-language-updates.pdf" title="PDF File" type="application/pdf">
+      <meta name="robots" content="all">
+      <link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+      <meta name="dcterms.created" content="2020-03-11T11:51:33-07:00">
+      
+      <meta name="dcterms.dateCopyrighted" content="2017, 2020">
+      <meta name="dcterms.category" content="java">
+      <meta name="dcterms.identifier" content="F23118-01">
+      
+      <meta name="dcterms.product" content="en/java/javase/14">
+      <meta name="dcterms.release" content="14">
+      <link rel="prev" href="pattern-matching-instanceof-operator.html" title="Previous" type="text/html">
+      <link rel="next" href="switch-expressions.html" title="Next" type="text/html">
+      <script>
+        document.write('<style type="text/css">');
+        document.write('body > .noscript, body > .noscript ~ * { visibility: hidden; }');
+        document.write('</style>');
+     </script>
+      <script data-main="/sp_common/book-template/ohc-book-template/js/book-config" src="/sp_common/book-template/requirejs/require.js"></script>
+      <script>
+            if (window.require === undefined) {
+                document.write('<script data-main="sp_common/book-template/ohc-book-template/js/book-config" src="sp_common/book-template/requirejs/require.js"><\/script>');
+                document.write('<link href="sp_common/book-template/ohc-book-template/css/book.css" rel="stylesheet"/>');
+            }
+        </script>
+      <script type="application/json" id="ssot-metadata">{"primary":{"category":{"short_name":"java","element_name":"Java","display_in_url":true},"suite":{"short_name":"not-applicable","element_name":"Not Applicable","display_in_url":false},"product_group":{"short_name":"not-applicable","element_name":"Not Applicable","display_in_url":false},"product":{"short_name":"javase","element_name":"Java SE","display_in_url":true},"release":{"short_name":"14","element_name":"14","display_in_url":true}}}</script>
+      
+    <meta name="dcterms.title" content="Java SE Language Updates">
+    <meta name="dcterms.isVersionOf" content="LANGUAGE">
+  <script>window.ohcglobal || document.write('<script src="/en/dcommon/js/global.js">\x3C/script>')</script></head>
+   <body>
+      <div class="noscript alert alert-danger text-center" role="alert">
+         <a href="pattern-matching-instanceof-operator.html" class="pull-left"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</a>
+         <a href="switch-expressions.html" class="pull-right">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+         <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> JavaScript must be enabled to correctly display this content
+        
+      </div>
+      <article>
+         <header>
+            <ol class="breadcrumb" vocab="http://schema.org/" typeof="BreadcrumbList">
+               <li property="itemListElement" typeof="ListItem"><a href="index.html" property="item" typeof="WebPage"><span property="name">Java Language Updates</span></a></li>
+               <li class="active" property="itemListElement" typeof="ListItem">Records</li>
+            </ol>
+            <a id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263" name="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263"></a>
+            
+            <h2 id="JSLAN-GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263" class="sect2"><span class="enumeration_chapter">4 </span>Records
+            </h2>
+         </header>
+         <div class="ind">
+            <div>
+               <p>JDK 14 introduces records, which are a new kind of type declaration. Like an
+            <code class="codeph">enum</code>, a record is a restricted form of a class. It’s ideal for "plain
+        data carriers," classes that contain data not meant to be altered and only the most
+        fundamental methods such as constructors and accessors.
+               </p>
+               <div class="infoboxnote" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__GUID-AD27199D-C1B7-4097-A3A6-20C2A22F389F">
+                  <p class="notep1">Note:</p>
+                  
+                  <p><span>This is a preview
+                                                  feature, which is a feature whose design,
+                                                  specification, and implementation are complete,
+                                                  but is not permanent, which means that the feature
+                                                  may exist in a different form or not at all in
+                                                  future JDK releases. To compile and run code that
+                                                  contains preview features, you must specify
+                                                  additional command-line options. See <a href="preview-language-and-vm-features.html#GUID-5A82FE0E-0CA4-4F1F-B075-564874FE2823" title="A preview feature is a new feature whose design, specification, and implementation are complete, but which is not permanent, which means that the feature may exist in a different form or not at all in future JDK releases.">Preview Features</a>.</span></p>
+                  
+                  <p>For background information about records, see <a href="https://openjdk.java.net/jeps/359" target="_blank">JEP 359</a>.
+                  </p>
+                  
+               </div>
+               <p>Consider the following class definition:</p><pre class="pre codeblock"><code>final class Rectangle implements Shape {
+    final double length;
+    final double width;
+    
+    public Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+    
+    double length() { return length; }
+    double width() { return width; }
+}</code></pre><p>It has the following characteristics:</p>
+               <ul style="list-style-type: disc;" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__UL_Q2V_SVG_YJB">
+                  <li>All of its members are declared final</li>
+                  <li>Its only methods consist of a constructor, <code class="codeph">Rectangle(double
+                    length, double width)</code> and two accessors, <code class="codeph">length()</code> and
+                    <code class="codeph">width()</code></li>
+               </ul>
+               <p>You can represent this class with a record:</p><pre class="pre codeblock"><code>record Rectangle(float length, float width) { }</code></pre><p>A record consists of a name (in this example, it's
+                <code class="codeph">Rectangle</code>) and a list of the record's components  (which in this
+            example are <code class="codeph">float length</code> and <code class="codeph">float width</code>).
+               </p>
+               <p>A record acquires these members automatically:</p>
+               <ul style="list-style-type: disc;" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__UL_MVX_3YG_YJB">
+                  <li>A private <code class="codeph">final</code> field for each of its components
+                  </li>
+                  <li>A public read accessor method for each component with the same name and
+                type of the component; in this example, these methods are
+                    <code class="codeph">Rectangle::length()</code> and
+                <code class="codeph">Rectangle::width()</code></li>
+                  <li>A public constructor whose signature is derived from the record
+                components list. The constructor initializes each private field from the
+                corresponding argument.</li>
+                  <li>Implementations of the <code class="codeph">equals()</code> and
+                    <code class="codeph">hashCode()</code> methods, which specify that two records are equal if
+                they are of the same type and their corresponding record components are equal
+                  </li>
+                  <li>An implementation of the <code class="codeph">toString()</code> method that
+                includes the string representation of all the record's components, with their
+                names
+                  </li>
+               </ul>
+               <div class="section">
+                  <p class="subhead1" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__GUID-3677B517-B179-4891-BA52-45CB774E7250">Compact Constructors</p>
+                  
+                  
+                  <p>If you want your record's constructor to do more than initialize its private fields,
+                you can define a custom constructor for the record. However, unlike a class
+                constructor, a record constructor doesn't have a formal parameter list; this is
+                called a <span class="italic">compact constructor</span>.
+                  </p>
+                  
+                  <p>For example, the following record, <code class="codeph">HelloWorld</code>, has one field,
+                    <code class="codeph">message</code>. Its custom constructor calls
+                    <span class="apiname" translate="no">Objects.requireNonNull(message)</span>, which specifies that if the
+                    <code class="codeph">message</code> field is initialized with a null value, then a
+                    <span class="apiname" translate="no">NullPointerException</span> is thrown. (Custom record constructors
+                still initialize their record's private fields.)
+                  </p>
+                  <pre class="pre codeblock"><code>record HelloWorld(String message) {
+    public HelloWorld {
+        java.util.Objects.requireNonNull(message);
+    }
+}</code></pre>
+                  </div>
+               <!-- class="section" -->
+               <div class="section">
+                  <p class="subhead1" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__GUID-EEA9DAFB-1D1E-491E-811A-38B095EFCB00">Restrictions on Records</p>
+                  
+                  
+                  <p>The following are restrictions on the use of records:</p>
+                  
+                  <ul style="list-style-type: disc;" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__UL_Z4L_WYL_YJB">
+                     <li>Records cannot extend any class</li>
+                     <li>Records cannot declare instance fields (other than the private
+                        <code class="codeph">final</code> fields that correspond to the components of the
+                    record component list); any other declared fields must be
+                        <code class="codeph">static</code></li>
+                     <li>Records cannot be abstract; they are implicitly <code class="codeph">final</code></li>
+                     <li>The components of a record are implicitly final</li>
+                  </ul>
+                  
+                  <p>Beyond these restrictions, records behave like regular classes:</p>
+                  
+                  <ul style="list-style-type: disc;" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__UL_DFT_M1M_YJB">
+                     <li>You can declare them inside a class; nested records are implicitly static</li>
+                     <li>You can create generic records</li>
+                     <li>Records can implement interfaces</li>
+                     <li>You instantiate records with the <code class="codeph">new</code> keyword
+                     </li>
+                     <li>You can declare in a record's body static methods, static fields,
+                    static initializers, constructors, instance methods, and nested types</li>
+                     <li>You can annotate records and a record's individual components</li>
+                  </ul>
+                  
+               </div>
+               <!-- class="section" -->
+               <div class="section">
+                  <p class="subhead1" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__GUID-4419A1F5-02AE-4055-83E4-42B24BAB85DB">APIs Related to Records</p>
+                  
+                  
+                  <p>The class <span class="apiname" translate="no">java.lang.Class</span> has two new
+                methods related to records:
+                  </p>
+                  
+                  <ul style="list-style-type: disc;" id="GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263__UL_WNP_B3H_YJB">
+                     <li><span class="apiname" translate="no">RecordComponent[]
+                        getRecordComponents()</span>: Returns an array of <span class="apiname" translate="no">java.lang.reflect.RecordComponent</span> objects, which correspond to
+                    the record's components.
+                     </li>
+                     <li><span class="apiname" translate="no">boolean isRecord()</span>: Similar to
+                        <code class="codeph">isEnum()</code> except that it returns <code class="codeph">true</code> if
+                    the class was declared as a record. 
+                     </li>
+                  </ul>
+                  
+               </div>
+               <!-- class="section" -->
+            </div>
+         </div>
+      </article>
+   </body>
+</html>

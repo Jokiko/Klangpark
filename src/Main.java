@@ -35,19 +35,15 @@ public class Main {
                         Runnable runnable = new ParkTask(tV);
                         Future<?> f = executorService.submit(runnable);
                         futures.add(f);
-                        /*System.out.println("Erschaffe Task: x von "+i * parkUnit+ " bis "+(i + 1) * parkUnit+ ",y von "
-                                +j * parkUnit+ " bis "+(j + 1) * parkUnit+ ",z von "
-                                +k * parkUnit+ " bis "+(k + 1) * parkUnit);*/
                     }
                 }
             }
 
-            //source: https://stackoverflow.com/questions/33845405/how-to-check-if-all-tasks-running-on-executorservice-are-completed
             for(Future<?> future : futures)
                 future.get();
 
             long timeEnd = System.currentTimeMillis();
-            System.out.println("Verlaufszeit der Schleife: "+ (timeEnd - timeStart) + " Millisek.");
+            System.out.println(timeEnd - timeStart);
         }
 
     }

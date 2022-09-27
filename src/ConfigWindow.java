@@ -36,7 +36,7 @@ public class ConfigWindow extends JFrame implements ActionListener {
         add(xValue);
         add(new JLabel("y-Wert (in Parkeinheiten):"));
         add(yValue);
-        add(new JLabel("z-Wert (in Parkeinhieten):"));
+        add(new JLabel("z-Wert (in Parkeinheiten):"));
         add(zValue);
         add(new JLabel("Anzahl Vögel:"));
         add(birdValue);
@@ -57,7 +57,8 @@ public class ConfigWindow extends JFrame implements ActionListener {
             int z = Integer.parseInt(zValue.getText());
             int bird = Integer.parseInt(birdValue.getText());
             int insect = Integer.parseInt(insectValue.getText());
-            if((x*y*z)*pU < bird + insect){
+            System.out.println(x*pU*y*pU*z*pU);
+            if((x*pU*y*pU*z*pU) < bird + insect){
                 throw new IllegalArgumentException("Nicht mehr Tiere als Platz im Park!");
             }
 

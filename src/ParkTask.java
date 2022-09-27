@@ -34,7 +34,7 @@ public class ParkTask implements Runnable{
         if (soundType == 1){
             ratio = (Park.insectRange - amount)/Park.insectRange;
         }
-        //bird https://stackoverflow.com/questions/40514910/set-volume-of-java-clip
+        //bird http://www.playdotsound.com/portfolio-item/decibel-db-to-float-value-calculator-making-sense-of-linear-values-in-audio-tools/
         else {
             ratio = (Park.birdRange - amount)/Park.birdRange;
         }
@@ -62,7 +62,6 @@ public class ParkTask implements Runnable{
         amount1 = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
         amount2 = Math.sqrt((Math.pow(tempVector.x(), 2)+Math.pow(0, 2)+Math.pow(tempVector.z(), 2)));
         angle = Math.toDegrees(Math.acos(scalarProduct/(amount1*amount2)));
-        System.out.println(soundVector.x()+ ", "+ soundVector.z()+ ", "+angle);
         pan = convertAngleToPan(angle);
         return pan;
     }
@@ -74,13 +73,11 @@ public class ParkTask implements Runnable{
             mod -= (soundVector.y() * 0.1);
         }
         else if (soundVector.y() < 0){
-            double py = Park.getInstance().getHeight(); //TO-DO: Change this to getHeight later
+            double py = Park.getInstance().getHeight();
             mod += ((double) 3/py*(soundVector.y()*-1));
         }
 
         float rate = inFormat.getSampleRate();
-        //System.out.println("Sample Rate: "+rate);
-        //System.out.println("Sample Rate nachher: "+rate*mod);
 
         //return new AudioFormat with modified sampleRate and frameRate
         return new AudioFormat(inFormat.getEncoding(), (float) (rate*mod), inFormat.getSampleSizeInBits(),
@@ -90,9 +87,7 @@ public class ParkTask implements Runnable{
 
     //play bird sound with given modifiers
     private void playBirdSound(Vector3D soundVector){
-        System.out.println("Zwitscher");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
-        System.out.println(vectorLength);
         if(vectorLength <= Park.birdRange) {
             try {
                 int random = (int) (Math.random() * 600);
@@ -112,14 +107,12 @@ public class ParkTask implements Runnable{
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 float v = getSoundVolume(vectorLength, 2);
                 volume.setValue(v);
-                //System.out.println("Volume: "+Math.pow(10f, volume.getValue() / 20f));
 
                 //setting the sound's pan (left-right positioning)
                 FloatControl pan = (FloatControl) clip.getControl(FloatControl.Type.PAN);
                 float f = getSoundPanning(soundVector);
                 pan.setValue(f);
 
-                //TO-DO: random pitch shifting
                 clip.loop(0);
             } catch (LineUnavailableException | UnsupportedAudioFileException | IOException | InterruptedException e) {
                 e.printStackTrace();
@@ -128,9 +121,7 @@ public class ParkTask implements Runnable{
     }
 
     private void playInsectSound(Vector3D soundVector){
-        System.out.println("Zirp");
         double vectorLength = Math.sqrt((Math.pow(soundVector.x(),2)+Math.pow(soundVector.y(), 2)+Math.pow(soundVector.z(), 2)));
-        System.out.println(vectorLength);
         if(vectorLength <= Park.insectRange) {
             try {
                 int random = (int) (Math.random() * 600);
@@ -150,16 +141,13 @@ public class ParkTask implements Runnable{
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 float v = getSoundVolume(vectorLength, 1);
                 volume.setValue(v);
-                //System.out.println("Volume: "+Math.pow(10f, volume.getValue() / 20f));
 
                 //setting the sound's pan (left-right positioning)
                 FloatControl pan = (FloatControl) clip.getControl(FloatControl.Type.PAN);
                 float f = getSoundPanning(soundVector);
                 pan.setValue(f);
 
-                //TO-DO: random pitch shifting
                 clip.loop(0);
-                //myAudioCue.start(handle);
             } catch (LineUnavailableException | UnsupportedAudioFileException | IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -177,17 +165,14 @@ public class ParkTask implements Runnable{
                         synchronized(Park.lock) {
                             soundVector = new Vector3D(Park.currentX - i, Park.currentY - j, Park.currentZ - k);
                         }
-                        //System.out.println("Entfernung zum Standpunkt: "+soundVector.x() + ", "+ soundVector.z()+ ",h: "+soundVector.y());
                         int threshold = 4;
                         int random = (int) (Math.random() * threshold);
                         if(park[i][j][k].type() == 1){
-                            //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playInsectSound(soundVector);
                             }
                         }
                         else {
-                            //System.out.println("Random " + random);
                             if(random >= threshold-1) {
                                 playBirdSound(soundVector);
                             }

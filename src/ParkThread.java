@@ -35,7 +35,7 @@ public class ParkThread extends Thread{
         if (soundType == 1){
             ratio = (Park.insectRange - amount)/Park.insectRange;
         }
-        //bird https://stackoverflow.com/questions/40514910/set-volume-of-java-clip
+        //bird
         else {
             ratio = (Park.birdRange - amount)/Park.birdRange;
         }
